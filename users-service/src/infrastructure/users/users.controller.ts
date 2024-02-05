@@ -1,12 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
   Payload,
   RmqContext,
-  RpcException,
 } from '@nestjs/microservices';
 import { FindUserByIdUseCase } from 'src/domain/usecases/users/find-user-by-id.usecase';
+import { CustomExceptionFilter } from '../shared/filters/custom-exceptions.filter';
 
 @Controller()
 export class UsersController {
@@ -14,6 +14,7 @@ export class UsersController {
     private readonly findUserByIdUseCase: FindUserByIdUseCase, //
   ) {}
 
+  @UseFilters(new CustomExceptionFilter())
   @MessagePattern('find-user-by-id')
   async findUserById(
     @Payload() data: { id: string },
@@ -21,13 +22,11 @@ export class UsersController {
   ) {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
-    try {
-      const result = await this.findUserByIdUseCase.execute(data.id);
-      channel.ack(originalMsg);
-      return result;
-    } catch (error) {
-      channel.nack(originalMsg);
-      throw new RpcException(error);
-    }
+
+    channel.ack(originalMsg);
+
+    const result = await this.findUserByIdUseCase.execute(data.id);
+
+    return result;
   }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { RabbitMQService } from '../shared/rabbitmq/rabbitmq.service';
 
@@ -10,14 +10,8 @@ export class UsersController {
 
   @Get('/:id')
   async findUserById(@Param('id') id: string) {
-    try {
-      const result = await lastValueFrom(
-        this.rabbitMQService.users.send('find-user-by-id', { id }),
-      );
-
-      return result;
-    } catch (e) {
-      throw new BadRequestException(e);
-    }
+    return lastValueFrom(
+      this.rabbitMQService.users.send('find-user-by-id', { id }),
+    );
   }
 }
