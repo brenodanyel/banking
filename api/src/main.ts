@@ -12,7 +12,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [settingsService.getRabbitMQUrl()],
-      queue: 'user_queue',
+      queue: 'users_queue',
       queueOptions: {},
     },
   });
