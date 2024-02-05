@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch } from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
 
 @Catch()
 export class HttpExceptionFilter implements HttpExceptionFilter {
@@ -6,12 +6,16 @@ export class HttpExceptionFilter implements HttpExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
+    if (exception instanceof HttpException) {
+      return response
+        .status(exception.getStatus())
+        .json(exception.getResponse());
+    }
+
     return response.status(exception.error?.statusCode || 500).json({
-      error: {
-        name: exception.error?.name || 'Internal server error',
-        statusCode: exception.error?.statusCode || 500,
-        message: exception.error?.message || 'An unexpected error occurred',
-      },
+      message: exception.error?.message || 'An unexpected error occurred',
+      error: exception.error?.name || 'Internal server error',
+      statusCode: exception.error?.statusCode || 500,
     });
   }
 }
