@@ -6,18 +6,23 @@ import {
   RmqContext,
   RpcException,
 } from '@nestjs/microservices';
+import { FindUserByIdUseCase } from 'src/domain/usecases/users/find-user-by-id.usecase';
 
 @Controller()
 export class UsersController {
+  constructor(
+    private readonly findUserByIdUseCase: FindUserByIdUseCase, //
+  ) {}
+
   @MessagePattern('find-user-by-id')
   async findUserById(
-    @Payload() data: Record<string, unknown>,
+    @Payload() data: { id: string },
     @Ctx() context: RmqContext,
   ) {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
     try {
-      const result = { id: data.id, name: 'John doe', t: Date.now() };
+      const result = await this.findUserByIdUseCase.execute(data.id);
       channel.ack(originalMsg);
       return result;
     } catch (error) {

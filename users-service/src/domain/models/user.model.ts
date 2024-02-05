@@ -6,6 +6,6 @@ export class User {
   name: string;
   email: string;
   profilePicture: string | null;
-  address: UserAddress | null;
-  bankingDetails: UserBankingDetails | null;
+  address?: UserAddress | null;
+  bankingDetails?: UserBankingDetails | null;
 }
