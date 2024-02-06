@@ -2,5 +2,6 @@ import { Transaction } from '../models/transaction.model';
 
 export interface ITransactionRepository {
   findById(id: string): Promise<Transaction | null>;
+  findByUserId(userId: string): Promise<Transaction[]>;
   create(transaction: Omit<Transaction, 'id'>): Promise<Transaction>;
 }

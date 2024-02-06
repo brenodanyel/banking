@@ -1,4 +1,4 @@
-export interface IRabbitMQ<T> {
+export interface IRabbitMQ<T = unknown> {
   services: {
     users: T;
   };

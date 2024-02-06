@@ -24,4 +24,12 @@ export class TransactionsPrismaRepository implements ITransactionRepository {
 
     return result;
   }
+
+  async findByUserId(userId: string): Promise<Transaction[]> {
+    const result = await this.prismaService.transaction.findMany({
+      where: { senderUserId: userId },
+    });
+
+    return result;
+  }
 }

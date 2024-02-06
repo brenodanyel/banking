@@ -7,12 +7,14 @@ import {
 } from '@nestjs/microservices';
 import { CreateTransactionUsecase } from 'src/domain/usecases/transactions/create-transaction.usecase';
 import { FindTransactionByIdUseCase } from 'src/domain/usecases/transactions/find-transaction-by-id.usecase';
+import { FindTransactionsByUserIdUseCase } from 'src/domain/usecases/transactions/find-transactions-by-user-id.usecase';
 import { CustomExceptionFilter } from '../shared/filters/custom-exceptions.filter';
 
 @Controller()
 export class TransactionsController {
   constructor(
-    private readonly findUserByIdUseCase: FindTransactionByIdUseCase,
+    private readonly findTransactionByIdUseCase: FindTransactionByIdUseCase,
+    private readonly findTransactionsByUserIdUseCase: FindTransactionsByUserIdUseCase,
     private readonly createTransactionUseCase: CreateTransactionUsecase,
   ) {}
 
@@ -27,7 +29,25 @@ export class TransactionsController {
 
     channel.ack(originalMsg);
 
-    const result = await this.findUserByIdUseCase.execute(data.id);
+    const result = await this.findTransactionByIdUseCase.execute(data.id);
+
+    return result;
+  }
+
+  @UseFilters(new CustomExceptionFilter())
+  @MessagePattern('find-transaction-by-user-id')
+  async findTransactionByUserId(
+    @Payload() data: { userId: string },
+    @Ctx() context: RmqContext,
+  ) {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+
+    channel.ack(originalMsg);
+
+    const result = await this.findTransactionsByUserIdUseCase.execute(
+      data.userId,
+    );
 
     return result;
   }

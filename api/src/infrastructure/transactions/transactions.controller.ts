@@ -24,6 +24,20 @@ export class TransactionsController {
     });
   }
 
+  @Get('/user/:userId')
+  @ApiOperation({ summary: 'Find transactions by user id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The transactions have been successfully found',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async findByTransactionUserId(@Param('userId') userId: string) {
+    return this.rmqService.send('transactions', 'find-transaction-by-user-id', {
+      userId,
+    });
+  }
+
   @Post('/')
   @ApiOperation({ summary: 'Create a new transaction' })
   @ApiResponse({
