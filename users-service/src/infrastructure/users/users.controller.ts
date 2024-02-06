@@ -8,10 +8,7 @@ import {
 import { User } from '@prisma/client';
 import { FindUserByIdUseCase } from 'src/domain/usecases/users/find-user-by-id.usecase';
 import { UpdateUserByIdUseCase } from 'src/domain/usecases/users/update-user.by-id.usecase';
-import {
-  CustomExceptionFilter,
-  ZodValidationExceptionFilter,
-} from '../shared/filters/custom-exceptions.filter';
+import { CustomExceptionFilter } from '../shared/filters/custom-exceptions.filter';
 
 @Controller()
 export class UsersController {
@@ -20,7 +17,7 @@ export class UsersController {
     private readonly updateUserByIdUseCase: UpdateUserByIdUseCase,
   ) {}
 
-  @UseFilters(new CustomExceptionFilter(), new ZodValidationExceptionFilter())
+  @UseFilters(new CustomExceptionFilter())
   @MessagePattern('find-user-by-id')
   async findUserById(
     @Payload() data: { id: string },
@@ -36,7 +33,7 @@ export class UsersController {
     return result;
   }
 
-  @UseFilters(new CustomExceptionFilter(), new ZodValidationExceptionFilter())
+  @UseFilters(new CustomExceptionFilter())
   @MessagePattern('update-user-by-id')
   async updateUserById(
     @Payload() data: { id: string; payload: Partial<User> },

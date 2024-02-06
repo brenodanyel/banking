@@ -35,7 +35,7 @@ export class UpdateUserByIdUseCase {
     id: string,
     input: z.infer<typeof updateUserSchema>,
   ): Promise<User> {
-    const data = await updateUserSchema.parseAsync(input);
+    const data = await updateUserSchema.parse(input);
 
     const user = await this.userRepository.findById(id);
 

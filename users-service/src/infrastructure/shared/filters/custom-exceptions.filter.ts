@@ -4,32 +4,37 @@ import { Observable, throwError } from 'rxjs';
 import { AppException } from 'src/domain/shared/exceptions';
 import { ZodError } from 'zod';
 
-@Catch(AppException)
-export class CustomExceptionFilter implements RpcExceptionFilter<AppException> {
-  catch(exception: AppException): Observable<RpcException> {
-    return throwError(
-      () =>
-        new RpcException({
-          name: exception.name,
-          statusCode: exception.statusCode,
-          message: exception.message,
-        }),
-    );
-  }
-}
+@Catch()
+export class CustomExceptionFilter implements RpcExceptionFilter<any> {
+  private exceptionConverter(exception: any): RpcException {
+    if (exception instanceof AppException) {
+      return new RpcException({
+        message: exception.message,
+        error: exception.name,
+        statusCode: exception.statusCode,
+      });
+    }
 
-@Catch(ZodError)
-export class ZodValidationExceptionFilter
-  implements RpcExceptionFilter<ZodError>
-{
-  catch(exception: ZodError): Observable<RpcException> {
-    return throwError(
-      () =>
-        new RpcException({
-          name: exception.name,
-          statusCode: 400,
-          message: exception.issues,
-        }),
-    );
+    if (exception instanceof ZodError) {
+      return new RpcException({
+        message: exception.issues,
+        error: exception.name,
+        statusCode: 400,
+      });
+    }
+
+    if (exception instanceof RpcException) {
+      return exception;
+    }
+
+    return new RpcException({
+      message: exception.error?.message || 'An unexpected error occurred',
+      error: exception.error?.name || 'Internal server error',
+      statusCode: exception.error?.statusCode || 500,
+    });
+  }
+
+  catch(exception: any): Observable<RpcException> {
+    return throwError(() => this.exceptionConverter(exception));
   }
 }

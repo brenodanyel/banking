@@ -16,4 +16,12 @@ export class TransactionsPrismaRepository implements ITransactionRepository {
 
     return result;
   }
+
+  async create(transaction: Transaction): Promise<Transaction> {
+    const result = await this.prismaService.transaction.create({
+      data: transaction,
+    });
+
+    return result;
+  }
 }
