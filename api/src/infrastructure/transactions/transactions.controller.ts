@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RabbitMQService } from '../shared/rabbitmq/rabbitmq.service';
 import { CreateTransactionDTO } from './dtos/create-transaction.dto';
@@ -32,9 +32,14 @@ export class TransactionsController {
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async findByTransactionUserId(@Param('userId') userId: string) {
+  async findByTransactionUserId(
+    @Param('userId') userId: string,
+    @Query('limit') limit: string,
+    @Query('page') page: string,
+  ) {
     return this.rmqService.send('transactions', 'find-transaction-by-user-id', {
       userId,
+      pagination: { limit, page },
     });
   }
 

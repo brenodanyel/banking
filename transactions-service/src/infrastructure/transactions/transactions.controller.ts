@@ -37,7 +37,8 @@ export class TransactionsController {
   @UseFilters(new CustomExceptionFilter())
   @MessagePattern('find-transaction-by-user-id')
   async findTransactionByUserId(
-    @Payload() data: { userId: string },
+    @Payload()
+    data: { userId: string; pagination: { limit?: number; page?: number } },
     @Ctx() context: RmqContext,
   ) {
     const channel = context.getChannelRef();
@@ -47,6 +48,7 @@ export class TransactionsController {
 
     const result = await this.findTransactionsByUserIdUseCase.execute(
       data.userId,
+      data.pagination,
     );
 
     return result;
