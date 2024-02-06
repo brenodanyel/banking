@@ -14,6 +14,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Banking API')
+    .addServer('http://localhost:3000', 'Local')
     .setDescription('The banking API')
     .setVersion('1.0')
     .build();
