@@ -19,11 +19,19 @@ export class RabbitMQService {
     }),
   };
 
-  async send<T>(service: keyof typeof this.services, pattern: string, data: T) {
+  async send(
+    service: keyof typeof this.services,
+    pattern: string,
+    data: unknown,
+  ) {
     return lastValueFrom(this.services[service].send(pattern, data));
   }
 
-  async emit<T>(service: keyof typeof this.services, pattern: string, data: T) {
+  async emit(
+    service: keyof typeof this.services,
+    pattern: string,
+    data: unknown,
+  ) {
     this.services[service].emit(pattern, data);
   }
 }
