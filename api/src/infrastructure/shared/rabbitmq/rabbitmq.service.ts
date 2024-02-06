@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import {
+  ClientProxy,
+  ClientProxyFactory,
+  Transport,
+} from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
+import { IRabbitMQ } from 'src/domain/shared/rabbitmq.interface';
 import { SettingsService } from '../settings/settings.service';
 
 @Injectable()
-export class RabbitMQService {
+export class RabbitMQService implements IRabbitMQ<ClientProxy> {
   constructor(
     private readonly settingsService: SettingsService, //
   ) {}
 
-  private services = {
+  services = {
     users: ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
