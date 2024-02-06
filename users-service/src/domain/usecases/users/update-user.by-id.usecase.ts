@@ -12,8 +12,8 @@ const updateUserSchema = z.object({
     .object({
       street: z.string(),
       city: z.string(),
-      state: z.string(),
-      zip: z.string(),
+      state: z.string().length(2),
+      zip: z.string().regex(/^\d{5}-\d{3}$/),
       country: z.string(),
     })
     .optional(),
