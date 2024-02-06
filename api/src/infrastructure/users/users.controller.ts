@@ -11,23 +11,45 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RabbitMQService } from '../shared/rabbitmq/rabbitmq.service';
 import { StorageService } from '../shared/storage/storage.service';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(
-    private readonly rmqService: RabbitMQService, //
+    private readonly rmqService: RabbitMQService,
     private readonly storageService: StorageService,
   ) {}
 
   @Get('/:id')
+  @ApiOperation({ summary: 'Find user by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully found',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
   async findUserById(@Param('id') id: string) {
     return this.rmqService.send('users', 'find-user-by-id', { id });
   }
 
   @Patch('/:id')
+  @ApiOperation({ summary: 'Update user by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully updated',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
   async updateUserById(
     @Param('id') id: string,
     @Body() payload: UpdateUserDTO,
@@ -36,6 +58,26 @@ export class UsersController {
   }
 
   @Patch('/:id/profile-picture')
+  @ApiOperation({ summary: 'Update user profile picture by id' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'The user profile picture (max size: 2MB)',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: "The user's profile picture has been successfully found",
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
   @UseInterceptors(FileInterceptor('file'))
   async updateUserProfilePictureById(
     @Param('id') id: string,
