@@ -12,11 +12,9 @@ export class HttpExceptionFilter implements HttpExceptionFilter {
         .json(exception.getResponse());
     }
 
-    console.log(exception);
-
     return response.status(exception.error?.statusCode || 500).json({
       message: exception.error?.message || 'An unexpected error occurred',
-      error: exception.error?.name || 'Internal server error',
+      error: exception.error?.error || 'Internal server error',
       statusCode: exception.error?.statusCode || 500,
     });
   }
