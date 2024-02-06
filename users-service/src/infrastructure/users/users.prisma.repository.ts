@@ -26,6 +26,7 @@ export class UsersPrismaRepository implements IUserRepository {
     const data: Prisma.UserUpdateInput = {
       name: payload.name,
       email: payload.email,
+      profilePicture: payload.profilePicture,
     };
 
     if (payload.address) {

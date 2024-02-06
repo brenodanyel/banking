@@ -11,4 +11,20 @@ export class SettingsService implements ISettings {
   getRabbitMQUrl(): string {
     return this.configService.get<string>('RABBITMQ_URL');
   }
+
+  getAWSAccessKeyId(): string {
+    return this.configService.get<string>('AWS_ACCESS_KEY_ID');
+  }
+
+  getAWSAccessKeySecret(): string {
+    return this.configService.get<string>('AWS_ACCESS_KEY_SECRET');
+  }
+
+  getAWSBucket(): string {
+    return this.configService.get<string>('AWS_BUCKET_NAME');
+  }
+
+  getAWSRegion(): string {
+    return this.configService.get<string>('AWS_REGION');
+  }
 }
