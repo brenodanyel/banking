@@ -17,6 +17,14 @@ export class RabbitMQService {
         queue: 'users_queue',
       },
     }),
+
+    transactions: ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [this.settingsService.getRabbitMQUrl()],
+        queue: 'transactions_queue',
+      },
+    }),
   };
 
   async send(
