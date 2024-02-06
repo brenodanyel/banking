@@ -23,7 +23,6 @@ const updateUserSchema = z.object({
       accountNumber: z.string(),
       agency: z.string(),
     })
-    .nullable()
     .optional(),
 });
 
@@ -36,9 +35,7 @@ export class UpdateUserByIdUseCase {
     id: string,
     input: z.infer<typeof updateUserSchema>,
   ): Promise<User> {
-    const data = await updateUserSchema.parseAsync(input, {
-      async: true,
-    });
+    const data = await updateUserSchema.parseAsync(input);
 
     const user = await this.userRepository.findById(id);
 
