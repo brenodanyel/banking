@@ -1,4 +1,4 @@
-export class Transaction {
+export interface Transaction {
   id: string;
   senderUserId: string;
   receiverUserId: string;
