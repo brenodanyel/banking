@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FindUserByIdUseCase } from 'src/domain/usecases/users/find-user-by-id.usecase';
-import { UpdateUserByIdUseCase } from 'src/domain/usecases/users/update-user.by-id.usecase';
+import { FindUserByIdUseCase } from '../../domain/usecases/users/find-user-by-id.usecase';
+import { UpdateUserByIdUseCase } from '../../domain/usecases/users/update-user.by-id.usecase';
 import { UsersController } from './users.controller';
 import { UsersPrismaRepository } from './users.prisma.repository';
 

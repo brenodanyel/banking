@@ -1,4 +1,4 @@
-export class UserAddress {
+export interface UserAddress {
   street: string;
   city: string;
   state: string;

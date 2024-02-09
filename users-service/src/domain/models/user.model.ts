@@ -1,7 +1,7 @@
 import { UserAddress } from './user-address.model';
 import { UserBankingDetails } from './user-banking-details.model';
 
-export class User {
+export interface User {
   id: string;
   name: string;
   email: string;

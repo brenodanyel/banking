@@ -1,8 +1,8 @@
 import { Catch, RpcExceptionFilter } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Observable, throwError } from 'rxjs';
-import { AppException } from 'src/domain/shared/exceptions';
 import { ZodError } from 'zod';
+import { AppException } from '../../../domain/shared/exceptions';
 
 @Catch()
 export class CustomExceptionFilter implements RpcExceptionFilter<any> {

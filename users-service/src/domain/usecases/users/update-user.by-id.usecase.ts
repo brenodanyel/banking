@@ -1,7 +1,7 @@
 import { User } from 'src/domain/models/user.model';
 import { IUserRepository } from 'src/domain/repositories/user.repository';
-import { NotFoundException } from 'src/domain/shared/exceptions';
 import * as z from 'zod';
+import { NotFoundException } from '../../shared/exceptions';
 
 const updateUserSchema = z.object({
   name: z.string().optional(),
@@ -35,7 +35,7 @@ export class UpdateUserByIdUseCase {
     id: string,
     input: z.infer<typeof updateUserSchema>,
   ): Promise<User> {
-    const data = await updateUserSchema.parse(input);
+    const data = updateUserSchema.parse(input);
 
     const user = await this.userRepository.findById(id);
 

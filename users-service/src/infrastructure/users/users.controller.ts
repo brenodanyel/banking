@@ -6,8 +6,8 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { User } from '@prisma/client';
-import { FindUserByIdUseCase } from 'src/domain/usecases/users/find-user-by-id.usecase';
-import { UpdateUserByIdUseCase } from 'src/domain/usecases/users/update-user.by-id.usecase';
+import { FindUserByIdUseCase } from '../../domain/usecases/users/find-user-by-id.usecase';
+import { UpdateUserByIdUseCase } from '../../domain/usecases/users/update-user.by-id.usecase';
 import { CustomExceptionFilter } from '../shared/filters/custom-exceptions.filter';
 
 @Controller()

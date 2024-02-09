@@ -1,4 +1,4 @@
-export class UserBankingDetails {
+export interface UserBankingDetails {
   accountNumber: string;
   agency: string;
 }

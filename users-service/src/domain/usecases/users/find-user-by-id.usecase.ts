@@ -1,6 +1,6 @@
 import { User } from 'src/domain/models/user.model';
 import { IUserRepository } from 'src/domain/repositories/user.repository';
-import { NotFoundException } from 'src/domain/shared/exceptions';
+import { NotFoundException } from '../../shared/exceptions';
 
 export class FindUserByIdUseCase {
   constructor(
