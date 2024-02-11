@@ -5,4 +5,5 @@ export const VALID_USER: User = {
   name: 'John Doe',
   email: 'johndoe@email.com',
   profilePicture: null,
+  password: 'randompassword',
 };

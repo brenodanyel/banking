@@ -6,10 +6,12 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { User } from '@prisma/client';
+import { UserWithoutPassword } from 'src/domain/models/user.model';
 import { FindUserByEmailUseCase } from 'src/domain/usecases/users/find-user-by-email.usecase';
 import { FindUserByIdUseCase } from '../../domain/usecases/users/find-user-by-id.usecase';
 import { UpdateUserByIdUseCase } from '../../domain/usecases/users/update-user.by-id.usecase';
 import { CustomExceptionFilter } from '../shared/filters/custom-exceptions.filter';
+import { UserPresenter } from './presenters/user.presenter';
 
 @Controller()
 export class UsersController {
@@ -24,15 +26,18 @@ export class UsersController {
   async findUserById(
     @Payload() data: { id: string },
     @Ctx() context: RmqContext,
-  ) {
+  ): Promise<UserWithoutPassword> {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
     channel.ack(originalMsg);
 
-    const result = await this.findUserByIdUseCase.execute(data.id);
+    const user = await this.findUserByIdUseCase.execute(data.id);
 
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userWithoutPassword } = new UserPresenter(user);
+
+    return userWithoutPassword;
   }
 
   @UseFilters(new CustomExceptionFilter())
@@ -40,18 +45,21 @@ export class UsersController {
   async updateUserById(
     @Payload() data: { id: string; payload: Partial<User> },
     @Ctx() context: RmqContext,
-  ) {
+  ): Promise<UserWithoutPassword> {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
     channel.ack(originalMsg);
 
-    const result = await this.updateUserByIdUseCase.execute(
+    const user = await this.updateUserByIdUseCase.execute(
       data.id,
       data.payload,
     );
 
-    return result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userWithoutPassword } = new UserPresenter(user);
+
+    return userWithoutPassword;
   }
 
   @UseFilters(new CustomExceptionFilter())
@@ -59,14 +67,14 @@ export class UsersController {
   async findUserByEmail(
     @Payload() data: { email: string },
     @Ctx() context: RmqContext,
-  ) {
+  ): Promise<UserPresenter> {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
     channel.ack(originalMsg);
 
-    const result = await this.findUserByEmailUseCase.execute(data.email);
+    const user = await this.findUserByEmailUseCase.execute(data.email);
 
-    return result;
+    return new UserPresenter(user);
   }
 }
