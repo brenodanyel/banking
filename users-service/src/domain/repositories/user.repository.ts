@@ -6,5 +6,6 @@ type DeepPartial<T> = {
 
 export interface IUserRepository {
   findById(id: string): Promise<User | null>;
+  findUserByEmail(email: string): Promise<User | null>;
   updateById(id: string, payload: DeepPartial<User>): Promise<User>;
 }

@@ -22,6 +22,18 @@ export class UsersPrismaRepository implements IUserRepository {
     return result;
   }
 
+  async findUserByEmail(email: string): Promise<User | null> {
+    const result = await this.prismaService.user.findUnique({
+      where: { email },
+      include: {
+        address: true,
+        bankingDetails: true,
+      },
+    });
+
+    return result;
+  }
+
   async updateById(id: string, payload: Partial<User>): Promise<User> {
     const data: Prisma.UserUpdateInput = {
       name: payload.name,
