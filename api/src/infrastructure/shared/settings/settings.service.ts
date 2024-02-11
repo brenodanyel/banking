@@ -27,4 +27,8 @@ export class SettingsService implements ISettings {
   getAWSRegion(): string {
     return this.configService.get<string>('AWS_REGION');
   }
+
+  getJWTSecretKey(): string {
+    return this.configService.get<string>('JWT_SECRET') || 'secret';
+  }
 }

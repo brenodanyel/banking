@@ -4,4 +4,5 @@ export interface ISettings {
   getAWSAccessKeySecret(): string;
   getAWSBucket(): string;
   getAWSRegion(): string;
+  getJWTSecretKey(): string;
 }
