@@ -35,6 +35,7 @@ export class CustomExceptionFilter implements RpcExceptionFilter<any> {
   }
 
   catch(exception: any): Observable<RpcException> {
+    console.error(exception);
     return throwError(() => this.exceptionConverter(exception));
   }
 }
