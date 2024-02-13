@@ -9,26 +9,26 @@ export class SettingsService implements ISettings {
   ) {}
 
   getRabbitMQUrl(): string {
-    return this.configService.get<string>('RABBITMQ_URL');
+    return this.configService.get('RABBITMQ_URL');
   }
 
   getAWSAccessKeyId(): string {
-    return this.configService.get<string>('AWS_ACCESS_KEY_ID');
+    return this.configService.get('AWS_ACCESS_KEY_ID');
   }
 
   getAWSAccessKeySecret(): string {
-    return this.configService.get<string>('AWS_ACCESS_KEY_SECRET');
+    return this.configService.get('AWS_ACCESS_KEY_SECRET');
   }
 
   getAWSBucket(): string {
-    return this.configService.get<string>('AWS_BUCKET_NAME');
+    return this.configService.get('AWS_BUCKET_NAME');
   }
 
   getAWSRegion(): string {
-    return this.configService.get<string>('AWS_REGION');
+    return this.configService.get('AWS_REGION');
   }
 
   getJWTSecretKey(): string {
-    return this.configService.get<string>('JWT_SECRET') || 'secret';
+    return this.configService.get('JWT_SECRET') || 'secret';
   }
 }

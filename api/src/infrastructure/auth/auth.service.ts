@@ -3,8 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { RabbitMQService } from '../shared/rabbitmq/rabbitmq.service';
 
-// Tempo gasto até então: 2h
-
 @Injectable()
 export class AuthService {
   constructor(

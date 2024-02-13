@@ -8,8 +8,10 @@ import {
   ParseFilePipe,
   Patch,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,
@@ -18,10 +20,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { LocalAuthGuard } from '../auth/guards/auth.guard';
 import { RabbitMQService } from '../shared/rabbitmq/rabbitmq.service';
 import { StorageService } from '../shared/storage/storage.service';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
@@ -38,6 +40,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
+  @UseGuards(AuthGuard('local'), LocalAuthGuard)
   async findUserById(@Param('id') id: string) {
     return this.rmqService.send('users', 'find-user-by-id', { id });
   }

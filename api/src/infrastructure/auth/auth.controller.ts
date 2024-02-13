@@ -18,7 +18,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 403, description: 'Invalid credentials' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  create(@Body() { email, password }: LoginDto) {
+  login(@Body() { email, password }: LoginDto) {
     return this.authService.login(email, password);
   }
 }
