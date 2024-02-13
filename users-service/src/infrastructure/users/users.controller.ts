@@ -7,6 +7,7 @@ import {
 } from '@nestjs/microservices';
 import { User } from '@prisma/client';
 import { UserWithoutPassword } from 'src/domain/models/user.model';
+import { CreateUserUseCase } from 'src/domain/usecases/users/create-user.usecase';
 import { FindUserByEmailUseCase } from 'src/domain/usecases/users/find-user-by-email.usecase';
 import { FindUserByIdUseCase } from '../../domain/usecases/users/find-user-by-id.usecase';
 import { UpdateUserByIdUseCase } from '../../domain/usecases/users/update-user.by-id.usecase';
@@ -19,6 +20,7 @@ export class UsersController {
     private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly updateUserByIdUseCase: UpdateUserByIdUseCase,
     private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly createUserUseCase: CreateUserUseCase,
   ) {}
 
   @UseFilters(new CustomExceptionFilter())
@@ -67,7 +69,7 @@ export class UsersController {
   async findUserByEmail(
     @Payload() data: { email: string },
     @Ctx() context: RmqContext,
-  ): Promise<UserPresenter> {
+  ): Promise<UserPresenter | null> {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
@@ -75,6 +77,29 @@ export class UsersController {
 
     const user = await this.findUserByEmailUseCase.execute(data.email);
 
+    if (!user) {
+      return null;
+    }
+
     return new UserPresenter(user);
+  }
+
+  @UseFilters(new CustomExceptionFilter())
+  @MessagePattern('create-user')
+  async createUser(
+    @Payload() data: Record<string, unknown>,
+    @Ctx() context: RmqContext,
+  ): Promise<UserWithoutPassword> {
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+
+    channel.ack(originalMsg);
+
+    const user = await this.createUserUseCase.execute(data);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userWithoutPassword } = new UserPresenter(user);
+
+    return userWithoutPassword;
   }
 }

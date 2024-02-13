@@ -7,6 +7,7 @@ import {
   Param,
   ParseFilePipe,
   Patch,
+  Post,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -103,6 +104,22 @@ export class UsersController {
     return this.rmqService.send('users', 'update-user-by-id', {
       id,
       payload: { profilePicture: url },
+    });
+  }
+
+  @Post('/')
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created',
+  })
+  @ApiResponse({ status: 409, description: 'User already exists' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  createUser(@Body() data: { name: string; email: string; password: string }) {
+    return this.rmqService.send('users', 'create-user', {
+      name: data.name,
+      email: data.email,
+      password: data.password,
     });
   }
 }
