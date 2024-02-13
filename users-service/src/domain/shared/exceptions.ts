@@ -18,3 +18,13 @@ export class NotFoundException extends AppException {
     });
   }
 }
+
+export class ConflictException extends AppException {
+  constructor(message?: string) {
+    super({
+      statusCode: 409,
+      name: 'Conflict',
+      message: message ?? 'Conflict!',
+    });
+  }
+}
